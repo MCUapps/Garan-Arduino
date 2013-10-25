@@ -2,18 +2,16 @@
   Garan_Audio_Test
 
   Simple test code to play with Garan Audio Module's commands.
-  Tested on MSP430 Value Line G2 Launchpad with Energia using msp430g2552
 
   Email: fox@mcuapps.com
 */
 
-// constants won't change. They're used here to 
-// set pin numbers:
-const int buttonPin = PUSH2;     // the number of the pushbutton pin
+#include <SoftwareSerial.h>
+
+SoftwareSerial player(2, 3); // RX, TX
 
 void waitButton() {
-  delay(1000);
-  while (digitalRead(buttonPin) == HIGH) {}
+  delay(3000);
 }
 
 unsigned char commandBuffer[10];
@@ -47,34 +45,56 @@ const unsigned char GET_VERSION[]        = {0x02, 0x80, 0x01};
 void sendCommand(unsigned char command[]) {
   unsigned char checksum = 0;
 
-  Serial.write(0x24);
+  player.write(0x24);
 
   for (unsigned int i = 0; i <= command[0]; i++) {
-    Serial.write(command[i]);
+    player.write(command[i]);
     checksum ^= command[i];
   }
 
-  Serial.write(checksum);
+  player.write(checksum);
 }
 
 void setup() {
-  // initialize the pushbutton pin as an input:
-  pinMode(buttonPin, INPUT_PULLUP);     
-
   //Initialize serial and wait for port to open:
-  Serial.begin(9600); 
+  Serial.begin(115200); 
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for Leonardo only
+  }
+  Serial.println("Arduino is ready!");
+ 
+  player.begin(9600);
 } 
 
 void loop() {
-  waitButton();
-  sendCommand((unsigned char *)GET_VERSION);
+  if (Serial.available()) {
+    switch(Serial.read()) {
+      case '1':
+        sendCommand((unsigned char *)GET_VERSION);
+        break;
+      case '2':
+        sendCommand((unsigned char *)SEQUENCE_PLAY);
+        break;
+      case '3':
+        sendCommand((unsigned char *)NEXT);
+        break;
+      case '4':
+        sendCommand((unsigned char *)GET_MUSIC_TOTALITY);
+        break;
+      case ']':
+        sendCommand((unsigned char *)VOLUME_ADD);
+        break;
+      case '[':
+        sendCommand((unsigned char *)VOLUME_SUBSTRACT);
+        break;      
+    }
+  }
 
-  waitButton();
-  sendCommand((unsigned char *)SINGLE_PLAY);
+  if (player.available()) {
+    unsigned char recvByte = player.read();
+    if (recvByte == 0x24) Serial.println();
 
-  // This loop loops forever and does nothing
-  while(true) { 
-    continue; 
+    Serial.print(String(recvByte, HEX) + " ");
   }
 }
 
