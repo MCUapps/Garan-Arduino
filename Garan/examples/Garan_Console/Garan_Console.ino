@@ -11,10 +11,8 @@
 
 #if !defined(__MSP430_CPU__)
 SoftwareSerial garanSerial(2, 3); // RX, TX
-Ultrasonic ultrasonic(A5);
 #else
 SoftwareSerial garanSerial(P1_4, P1_5); // RX, TX
-Ultrasonic ultrasonic(P1_6);
 #endif
 
 Garan player(garanSerial);
@@ -63,8 +61,8 @@ void loop() {
       case 'n':
         player.next();
         break;
-      case 'l':
-        player.last();
+      case 'p':
+        player.prev();
         break;
       case 't':
         player.getMusicNumbers();

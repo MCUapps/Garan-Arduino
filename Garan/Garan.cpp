@@ -3,6 +3,7 @@
 #include <SoftwareSerial.h>
 #include <string.h>
 
+// example or fixed commands
 const uint8_t SINGLE_PLAY[]        = {0x04, 0x01, 0x00, 0x00, 0x01};  // NH NL
 const uint8_t SEQUENCE_PLAY[]      = {0x04, 0x02, 0x00, 0x00, 0x02};  // NH NL
 const uint8_t SINGLE_LOOP_PLAY[]   = {0x04, 0x03, 0x00, 0x00, 0x02};  // NH NL
@@ -12,15 +13,14 @@ const uint8_t SINGLE_LOOP_NAME[]   = {0x07, 0x06, 0x00, 0x31, 0x2E, 0x4D, 0x50, 
 const uint8_t STOP[]               = {0x02, 0x07, 0x00};
 const uint8_t PAUSE_PLAY[]         = {0x02, 0x08, 0x00};
 const uint8_t NEXT[]               = {0x02, 0x09, 0x00};
-const uint8_t LAST[]               = {0x02, 0x0A, 0x00};
+const uint8_t PREV[]               = {0x02, 0x0A, 0x00};
 const uint8_t VOLUME_UP[]          = {0x02, 0x0B, 0x00};
 const uint8_t VOLUME_DOWN[]        = {0x02, 0x0C, 0x00};
 const uint8_t SET_VOLUME[]         = {0x03, 0x0D, 0x00, 0x05};  // Value
 const uint8_t EQ_CHANGE[]          = {0x02, 0x0E, 0x00};
 const uint8_t SET_EQ[]             = {0x03, 0x0F, 0x00, 0x01};  // Value
-
 const uint8_t STANDBY_MODE[]       = {0x02, 0x10, 0x00};
-
+const uint8_t SET_TIME[]           = {0x09, 0x11, 0x00, 0x07, 0xDD, 0x06, 0x0D, 0x0B, 0x11, 0x01};
 const uint8_t GET_PLAYING_NAME[]   = {0x02, 0x21, 0x01};
 const uint8_t GET_MUSIC_NUMBERS[]  = {0x02, 0x22, 0x01};
 const uint8_t GET_PLAYING_ORDER[]  = {0x02, 0x23, 0x01};
@@ -58,24 +58,24 @@ inline void Garan::buildHead(uint8_t len, uint8_t cmd)  {
 
 void Garan::singlePlay(uint16_t number)  {
     buildHead(0x04, 0x01);
-    _commandBuff[3] = number >> 8;
-    _commandBuff[4] = number;
+    _commandBuff[3] = (uint8_t)(number >> 8);
+    _commandBuff[4] = (uint8_t)number;
 
     sendCommand(_commandBuff);
 }
 
 void Garan::sequencePlay(uint16_t number)  {
     buildHead(0x04, 0x02);
-    _commandBuff[3] = number >> 8;
-    _commandBuff[4] = number;
+    _commandBuff[3] = (uint8_t)(number >> 8);
+    _commandBuff[4] = (uint8_t)number;
 
     sendCommand(_commandBuff);
 }
 
 void Garan::singleLoopPlay(uint16_t number)  {
     buildHead(0x04, 0x02);
-    _commandBuff[3] = number >> 8;
-    _commandBuff[4] = number;
+    _commandBuff[3] = (uint8_t)(number >> 8);
+    _commandBuff[4] = (uint8_t)number;
 
     sendCommand(_commandBuff);
 }
@@ -113,8 +113,8 @@ void Garan::next()  {
     sendCommand((uint8_t *)NEXT);
 }
 
-void Garan::last()  {
-    sendCommand((uint8_t *)LAST);
+void Garan::prev()  {
+    sendCommand((uint8_t *)PREV);
 }
 
 void Garan::volumeUp()  {
@@ -145,6 +145,19 @@ void Garan::setEQ(uint8_t eq)  {
 
 void Garan::standbyMode()  {
     sendCommand((uint8_t *)STANDBY_MODE);
+}
+
+void Garan::setTime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second)  {
+    buildHead(0x09, 0x11);
+    _commandBuff[3] = (uint8_t)(year >> 8);
+    _commandBuff[4] = (uint8_t)year;
+    _commandBuff[5] = month;
+    _commandBuff[6] = day;
+    _commandBuff[7] = hour;
+    _commandBuff[8] = minute;
+    _commandBuff[9] = second;
+
+    sendCommand(_commandBuff);
 }
 
 void Garan::getPlayingName()  {

@@ -26,13 +26,14 @@ class Garan
         void stop();
         void pausePlay();
         void next();
-        void last();
+        void prev();
         void volumeUp();
         void volumeDown();
         void setVolume(uint8_t volume);
         void eqChange();
         void setEQ(uint8_t eq);
         void standbyMode();
+        void setTime(uint16_t year, uint8_t month, uint8_t day, uint8_t hour, uint8_t minute, uint8_t second);
         void getPlayingName();
         void getMusicNumbers();
         void getPlayingOrder();
