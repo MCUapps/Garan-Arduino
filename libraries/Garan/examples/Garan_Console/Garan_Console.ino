@@ -58,6 +58,9 @@ void loop() {
       case '0':
         player.setVolume(0);
         break;      
+      case 'f':
+        player.feedbackAtEnd();
+        break;
       case 'n':
         player.next();
         break;
