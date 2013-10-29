@@ -4,13 +4,14 @@
   Email: fox@mcuapps.com
 */
 
+#include <Arduino.h>
 #include <SoftwareSerial.h>
 #include "Garan.h"
 
 #include "Ultrasonic.h"
 
 #if !defined(__MSP430_CPU__)
-SoftwareSerial garanSerial(2, 3); // RX, TX
+SoftwareSerial garanSerial(8, 9); // RX, TX
 Ultrasonic ultrasonic(A5);
 #else
 SoftwareSerial garanSerial(P1_4, P1_5); // RX, TX

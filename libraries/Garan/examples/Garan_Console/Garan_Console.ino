@@ -6,13 +6,13 @@
   Email: fox@mcuapps.com
 */
 
+#include <Arduino.h>
 #include <SoftwareSerial.h>
 #include "Garan.h"
 
 #if !defined(__MSP430_CPU__)
 SoftwareSerial garanSerial(8, 9); // RX, TX
 #else
-#include <Energia.h>
 SoftwareSerial garanSerial(P1_4, P1_5); // RX, TX
 #endif
 
