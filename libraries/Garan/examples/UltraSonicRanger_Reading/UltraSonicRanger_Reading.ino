@@ -28,8 +28,6 @@ void setup() {
   while (!Serial) {
   }
 #endif
-
-  garanSerial.begin(9600);
 } 
 
 void loop() {

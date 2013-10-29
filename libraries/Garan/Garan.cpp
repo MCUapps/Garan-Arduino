@@ -1,7 +1,9 @@
 #include "Garan.h"
 
-#include <SoftwareSerial.h>
 #include <string.h>
+
+#include <Arduino.h>
+#include <SoftwareSerial.h>
 
 // example or fixed commands
 const uint8_t SINGLE_PLAY[]        = {0x04, 0x01, 0x00, 0x00, 0x01};  // NH NL
@@ -31,7 +33,9 @@ const uint8_t GET_VERSION[]        = {0x02, 0x80, 0x01};
 
 Garan::Garan(SoftwareSerial &theSerial) : _serial(theSerial)
 {
-    _commandBuff[2] = 0;
+    _serial.begin(9600);
+
+    _commandBuff[2] = 1;
 }
 
 bool Garan::available() {
@@ -42,7 +46,6 @@ void Garan::sendCommand(uint8_t command[])  {
     uint8_t checksum = 0;
 
     _serial.write(0x24);
-
     for (uint16_t i = 0; i <= command[0]; i++) {
         _serial.write(command[i]);
         checksum ^= command[i];
@@ -85,6 +88,7 @@ void Garan::singlePlayName(char *name)  {
     buildHead(strlen(name) + 2, 4);
 
     sendCommand(_commandBuff);
+    _serial.begin(9600);
 }
 
 void Garan::sequencePlayName(char *name)  {
@@ -92,6 +96,7 @@ void Garan::sequencePlayName(char *name)  {
     buildHead(strlen(name) + 2, 5);
 
     sendCommand(_commandBuff);
+    _serial.begin(9600);
 }
 
 void Garan::singleLoopName(char *name)  {
@@ -99,6 +104,7 @@ void Garan::singleLoopName(char *name)  {
     buildHead(strlen(name) + 2, 6);
 
     sendCommand(_commandBuff);
+    _serial.begin(9600);
 }
 
 void Garan::stop()  {

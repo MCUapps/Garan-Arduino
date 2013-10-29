@@ -10,8 +10,9 @@
 #include "Garan.h"
 
 #if !defined(__MSP430_CPU__)
-SoftwareSerial garanSerial(2, 3); // RX, TX
+SoftwareSerial garanSerial(8, 9); // RX, TX
 #else
+#include <Energia.h>
 SoftwareSerial garanSerial(P1_4, P1_5); // RX, TX
 #endif
 
@@ -27,8 +28,6 @@ void setup() {
   }
 #endif
   Serial.println("Console is ready!");
- 
-  garanSerial.begin(9600);
 } 
 
 void loop() {
@@ -38,7 +37,7 @@ void loop() {
         player.singlePlay(1);
         break;
       case '2':
-        player.singlePlay(2);
+        player.sequencePlay(2);
         break;
       case '3':
         player.singlePlay(3);
