@@ -7,6 +7,14 @@ It's not perfect, but it's working.
 
 SoftwareSerial works great as the communication channel with Garan. Just assign a pair of RX/TX, store some MP3 files in the micro-SD card, and your are ready to go.
 
+NOTICES
+-------
+
+Although the wiring is simple, you must check the following very carefully
+
+* Pick a pair of spare GPIO pins to act as your SoftwareSerial port. THESE ARE NOT THE HARDWARE RX/TX pins !!!
+* Garan's Rx accepts 3.3V ONLY !!! You need to connect a 1K Ohm resistence between Arduino's Tx and Garan's Rx if your Arduino's I/O pins act at 5V.
+
 Compatibilites
 --------------
 
